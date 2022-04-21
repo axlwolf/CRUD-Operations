@@ -20,7 +20,10 @@ const CrudOperations = ((window, document) =>  {
         $posts.addEventListener("click", (e) => {
             console.info(e.target);
             if(e.target.classList.contains("fa-trash-alt")) {
-                e.target.parentElement.parentElement.remove();
+                deletePost(e.target);
+            }
+            if(e.target.classList.contains("fa-edit")) {
+                editPost(e.target);
             }
         });
     }
@@ -55,15 +58,22 @@ const CrudOperations = ((window, document) =>  {
             <div class="post">
                 <p>${data.text}</p>
                 <span class="options">
-                    <i onClick="editPost(this)" class="fas fa-edit"></i>
-                    <i onClick="deletePost(this)" class="fas fa-trash-alt"></i>
+                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-trash-alt"></i>
                 </span>
             </div>
         `;
         $input.value = "";
     }
 
-    let deletePost = () => {}
+    let deletePost = (target) => {
+        target.parentElement.parentElement.remove();
+    }
+
+    let editPost = (target) => {
+        $input.value = target.parentElement.previousElementSibling.innerHTML;
+        target.parentElement.parentElement.remove();
+    }
 
     return {
         Init: init

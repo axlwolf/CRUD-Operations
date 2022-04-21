@@ -22,7 +22,11 @@ var CrudOperations = function (window, document) {
       console.info(e.target);
 
       if (e.target.classList.contains("fa-trash-alt")) {
-        e.target.parentElement.parentElement.remove();
+        deletePost(e.target);
+      }
+
+      if (e.target.classList.contains("fa-edit")) {
+        editPost(e.target);
       }
     });
   };
@@ -53,11 +57,18 @@ var CrudOperations = function (window, document) {
   };
 
   var createPost = function createPost() {
-    $posts.innerHTML += "\n            <div class=\"post\">\n                <p>".concat(data.text, "</p>\n                <span class=\"options\">\n                    <i onClick=\"editPost(this)\" class=\"fas fa-edit\"></i>\n                    <i onClick=\"deletePost(this)\" class=\"fas fa-trash-alt\"></i>\n                </span>\n            </div>\n        ");
+    $posts.innerHTML += "\n            <div class=\"post\">\n                <p>".concat(data.text, "</p>\n                <span class=\"options\">\n                    <i class=\"fas fa-edit\"></i>\n                    <i class=\"fas fa-trash-alt\"></i>\n                </span>\n            </div>\n        ");
     $input.value = "";
   };
 
-  var deletePost = function deletePost() {};
+  var deletePost = function deletePost(target) {
+    target.parentElement.parentElement.remove();
+  };
+
+  var editPost = function editPost(target) {
+    $input.value = target.parentElement.previousElementSibling.innerHTML;
+    target.parentElement.parentElement.remove();
+  };
 
   return {
     Init: init
