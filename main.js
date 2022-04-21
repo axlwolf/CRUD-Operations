@@ -2,7 +2,7 @@ const CrudOperations = ((window, document) =>  {
     const $form = document.getElementById("form");
     const $input = document.getElementById("input");
     const $msg = document.getElementById("msg");
-    const $posts = document.getElementById("posts");   
+    const $posts = document.getElementById("posts");  
     const $submitDataBtn = document.getElementById("submitData");
     let data = {};    
 
@@ -15,6 +15,13 @@ const CrudOperations = ((window, document) =>  {
         $form.addEventListener("submit", (e) => {
             e.preventDefault();
             submitData(e);
+        });
+
+        $posts.addEventListener("click", (e) => {
+            console.info(e.target);
+            if(e.target.classList.contains("fa-trash-alt")) {
+                e.target.parentElement.parentElement.remove();
+            }
         });
     }
 
@@ -45,7 +52,7 @@ const CrudOperations = ((window, document) =>  {
 
     let createPost = () => {
         $posts.innerHTML += `
-            <div>
+            <div class="post">
                 <p>${data.text}</p>
                 <span class="options">
                     <i onClick="editPost(this)" class="fas fa-edit"></i>
@@ -55,6 +62,8 @@ const CrudOperations = ((window, document) =>  {
         `;
         $input.value = "";
     }
+
+    let deletePost = () => {}
 
     return {
         Init: init

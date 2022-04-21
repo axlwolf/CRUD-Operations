@@ -18,6 +18,13 @@ var CrudOperations = function (window, document) {
       e.preventDefault();
       submitData(e);
     });
+    $posts.addEventListener("click", function (e) {
+      console.info(e.target);
+
+      if (e.target.classList.contains("fa-trash-alt")) {
+        e.target.parentElement.parentElement.remove();
+      }
+    });
   };
 
   var submitData = function submitData(e) {
@@ -46,9 +53,11 @@ var CrudOperations = function (window, document) {
   };
 
   var createPost = function createPost() {
-    $posts.innerHTML += "\n            <div>\n                <p>".concat(data.text, "</p>\n                <span class=\"options\">\n                    <i onClick=\"editPost(this)\" class=\"fas fa-edit\"></i>\n                    <i onClick=\"deletePost(this)\" class=\"fas fa-trash-alt\"></i>\n                </span>\n            </div>\n        ");
+    $posts.innerHTML += "\n            <div class=\"post\">\n                <p>".concat(data.text, "</p>\n                <span class=\"options\">\n                    <i onClick=\"editPost(this)\" class=\"fas fa-edit\"></i>\n                    <i onClick=\"deletePost(this)\" class=\"fas fa-trash-alt\"></i>\n                </span>\n            </div>\n        ");
     $input.value = "";
   };
+
+  var deletePost = function deletePost() {};
 
   return {
     Init: init
