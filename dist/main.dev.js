@@ -47,13 +47,26 @@ var TodoApp = function (window, document) {
     data.push({
       text: $textInput.value,
       date: $dateInput.value,
-      description: $textInput.value
+      description: $textArea.value
     });
     localStorage.setItem("data", JSON.stringify(data));
     console.log(data);
+    createTasks();
   };
 
-  var closeModal = function closeModal() {};
+  var createTasks = function createTasks() {
+    $tasks.innerHTML = "";
+    data.map(function (x, y) {
+      return $tasks.innerHTML += "\n                <div id=".concat(y, ">\n                      <span class=\"fw-bold\">").concat(x.text, "</span>\n                      <span class=\"small text-secondary\">").concat(x.date, "</span>\n                      <p>").concat(x.description, "</p>\n              \n                      <span class=\"options\">\n                        <i onClick= \"editTask(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#form\" class=\"fas fa-edit\"></i>\n                        <i onClick =\"deleteTask(this);createTasks()\" class=\"fas fa-trash-alt\"></i>\n                      </span>\n                    </div>\n                ");
+    });
+    resetForm();
+  };
+
+  var resetForm = function resetForm() {
+    $textInput.value = '';
+    $dateInput.value = '';
+    $textArea.value = '';
+  };
 
   return {
     Init: init
