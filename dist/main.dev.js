@@ -1,12 +1,18 @@
 "use strict";
 
-var CrudOperations = function (window, document) {
+var TodoApp = function (window, document) {
+  /*
+      DOM Selectors
+  */
   var $form = document.getElementById("form");
-  var $input = document.getElementById("input");
+  var $textInput = document.getElementById("textInput");
+  var $dateInput = document.getElementById("dateInput");
+  var $textArea = document.getElementById("textarea");
   var $msg = document.getElementById("msg");
-  var $posts = document.getElementById("posts");
-  var $submitDataBtn = document.getElementById("submitData");
-  var data = {};
+  var $tasks = document.getElementById("tasks");
+  var $addBtn = document.getElementById("add"); // Data
+
+  var data = [];
 
   var init = function init() {
     console.log("Init");
@@ -16,59 +22,38 @@ var CrudOperations = function (window, document) {
   var bindEvents = function bindEvents() {
     $form.addEventListener("submit", function (e) {
       e.preventDefault();
-      submitData(e);
+      formValidation();
     });
-    $posts.addEventListener("click", function (e) {
-      console.info(e.target);
-
-      if (e.target.classList.contains("fa-trash-alt")) {
-        deletePost(e.target);
-      }
-
-      if (e.target.classList.contains("fa-edit")) {
-        editPost(e.target);
-      }
-    });
-  };
-
-  var submitData = function submitData(e) {
-    console.log(e);
-    console.log("button clicked");
-    formValidation();
   };
 
   var formValidation = function formValidation() {
-    console.info("Validation");
-
-    if ($input.value == "") {
-      $msg.innerHTML = "Post cannot be blank";
-      console.warn("failure");
+    if ($textInput.value === "") {
+      console.error("Failure");
+      $msg.innerHTML = "Task cannot be blank";
     } else {
-      console.log("success");
+      console.log("Success");
       $msg.innerHTML = "";
       acceptData();
+      $addBtn.setAttribute("data-bs-dismiss", "modal");
+      $addBtn.click();
+
+      (function () {
+        $addBtn.setAttribute("data-bs-dismiss", "");
+      })();
     }
   };
 
   var acceptData = function acceptData() {
-    data.text = $input.value;
-    console.table(data);
-    createPost();
+    data.push({
+      text: $textInput.value,
+      date: $dateInput.value,
+      description: $textInput.value
+    });
+    localStorage.setItem("data", JSON.stringify(data));
+    console.log(data);
   };
 
-  var createPost = function createPost() {
-    $posts.innerHTML += "\n            <div class=\"post\">\n                <p>".concat(data.text, "</p>\n                <span class=\"options\">\n                    <i class=\"fas fa-edit\"></i>\n                    <i class=\"fas fa-trash-alt\"></i>\n                </span>\n            </div>\n        ");
-    $input.value = "";
-  };
-
-  var deletePost = function deletePost(target) {
-    target.parentElement.parentElement.remove();
-  };
-
-  var editPost = function editPost(target) {
-    $input.value = target.parentElement.previousElementSibling.innerHTML;
-    target.parentElement.parentElement.remove();
-  };
+  var closeModal = function closeModal() {};
 
   return {
     Init: init
@@ -76,7 +61,7 @@ var CrudOperations = function (window, document) {
 }(window, document);
 
 if (document.readyState === "complete" || document.readyState !== "loading" && !document.documentElement.doScroll) {
-  CrudOperations.Init();
+  TodoApp.Init();
 } else {
-  document.addEventListener("DOMContentLoaded", CrudOperations.Init);
+  document.addEventListener("DOMContentLoaded", TodoApp.Init);
 }

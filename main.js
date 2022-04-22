@@ -1,10 +1,17 @@
-const CrudOperations = ((window, document) =>  {
-    const $form = document.getElementById("form");
-    const $input = document.getElementById("input");
-    const $msg = document.getElementById("msg");
-    const $posts = document.getElementById("posts");  
-    const $submitDataBtn = document.getElementById("submitData");
-    let data = {};    
+const TodoApp = ((window, document) =>  {
+    /*
+        DOM Selectors
+    */
+    let $form = document.getElementById("form");
+    let $textInput = document.getElementById("textInput");
+    let $dateInput = document.getElementById("dateInput");
+    let $textArea = document.getElementById("textarea");
+    let $msg = document.getElementById("msg");
+    let $tasks = document.getElementById("tasks");
+    let $addBtn = document.getElementById("add");
+
+    // Data
+    let data = [];
 
     let init = () => { 
         console.log("Init");
@@ -14,66 +21,41 @@ const CrudOperations = ((window, document) =>  {
     let bindEvents = () => {
         $form.addEventListener("submit", (e) => {
             e.preventDefault();
-            submitData(e);
+            formValidation();
         });
-
-        $posts.addEventListener("click", (e) => {
-            console.info(e.target);
-            if(e.target.classList.contains("fa-trash-alt")) {
-                deletePost(e.target);
-            }
-            if(e.target.classList.contains("fa-edit")) {
-                editPost(e.target);
-            }
-        });
-    }
-
-    let submitData = (e) => {
-        console.log(e);
-        console.log("button clicked");
-
-        formValidation();
     }
 
     let formValidation = () => {
-        console.info("Validation");
-        if ($input.value == "") {
-            $msg.innerHTML = "Post cannot be blank";
-            console.warn("failure");
+        if($textInput.value === "") {
+            console.error("Failure");
+            $msg.innerHTML = "Task cannot be blank";
         } else {
-            console.log("success");
+            console.log("Success");
             $msg.innerHTML = "";
             acceptData();
+
+            $addBtn.setAttribute("data-bs-dismiss", "modal");
+            $addBtn.click();
+        
+            (() => {
+                $addBtn.setAttribute("data-bs-dismiss", "");
+            })();
         }
-    }
+    }; 
 
     let acceptData = () => {
-        data.text = $input.value;
-        console.table(data);
-        createPost();
-    }
+        data.push({
+            text: $textInput.value,
+            date: $dateInput.value,
+            description: $textInput.value
+        });
 
-    let createPost = () => {
-        $posts.innerHTML += `
-            <div class="post">
-                <p>${data.text}</p>
-                <span class="options">
-                    <i class="fas fa-edit"></i>
-                    <i class="fas fa-trash-alt"></i>
-                </span>
-            </div>
-        `;
-        $input.value = "";
-    }
+        localStorage.setItem("data", JSON.stringify(data));
 
-    let deletePost = (target) => {
-        target.parentElement.parentElement.remove();
-    }
+        console.log(data);
+    };
 
-    let editPost = (target) => {
-        $input.value = target.parentElement.previousElementSibling.innerHTML;
-        target.parentElement.parentElement.remove();
-    }
+    let closeModal = () => {};
 
     return {
         Init: init
@@ -85,8 +67,8 @@ if (
     document.readyState === "complete" ||
     (document.readyState !== "loading" && !document.documentElement.doScroll)
 ) {
-    CrudOperations.Init();
+    TodoApp.Init();
 } else {
-    document.addEventListener("DOMContentLoaded", CrudOperations.Init);
+    document.addEventListener("DOMContentLoaded", TodoApp.Init);
 }
 
