@@ -24,6 +24,19 @@ var TodoApp = function (window, document) {
       e.preventDefault();
       formValidation();
     });
+    $tasks.addEventListener("click", function (e) {
+      console.log(e.target);
+      var target = e.target;
+
+      if (target.classList.contains("fa-edit")) {
+        editTask(target);
+      }
+
+      if (target.classList.contains("fa-trash-alt")) {
+        deleteTask(target);
+        createTasks();
+      }
+    });
   };
 
   var formValidation = function formValidation() {
@@ -57,7 +70,7 @@ var TodoApp = function (window, document) {
   var createTasks = function createTasks() {
     $tasks.innerHTML = "";
     data.map(function (x, y) {
-      return $tasks.innerHTML += "\n                <div id=".concat(y, ">\n                      <span class=\"fw-bold\">").concat(x.text, "</span>\n                      <span class=\"small text-secondary\">").concat(x.date, "</span>\n                      <p>").concat(x.description, "</p>\n              \n                      <span class=\"options\">\n                        <i onClick= \"editTask(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#form\" class=\"fas fa-edit\"></i>\n                        <i onClick =\"deleteTask(this);createTasks()\" class=\"fas fa-trash-alt\"></i>\n                      </span>\n                    </div>\n                ");
+      return $tasks.innerHTML += "\n                <div id=".concat(y, ">\n                      <span class=\"fw-bold\">").concat(x.text, "</span>\n                      <span class=\"small text-secondary\">").concat(x.date, "</span>\n                      <p>").concat(x.description, "</p>\n              \n                      <span class=\"options\">\n                        <i data-bs-toggle=\"modal\" data-bs-target=\"#form\" class=\"fas fa-edit\"></i>\n                        <i class=\"fas fa-trash-alt\"></i>\n                      </span>\n                    </div>\n                ");
     });
     resetForm();
   };
@@ -66,6 +79,13 @@ var TodoApp = function (window, document) {
     $textInput.value = '';
     $dateInput.value = '';
     $textArea.value = '';
+  };
+
+  var deleteTask = function deleteTask(e) {
+    e.parentElement.parentElement.remove();
+    data.splice(e.parentElement.parentElement.id, 1);
+    localStorage.setItem("data", JSON.stringify(data));
+    console.log(data);
   };
 
   return {

@@ -23,6 +23,21 @@ const TodoApp = ((window, document) =>  {
             e.preventDefault();
             formValidation();
         });
+
+        $tasks.addEventListener("click", (e) => {
+            console.log(e.target);
+            let target = e.target;
+
+            if (target.classList.contains("fa-edit")) {
+                editTask(target);
+            }
+
+            if (target.classList.contains("fa-trash-alt")) {
+                deleteTask(target);
+                createTasks();
+            }
+
+        });
     }
 
     let formValidation = () => {
@@ -69,8 +84,8 @@ const TodoApp = ((window, document) =>  {
                       <p>${x.description}</p>
               
                       <span class="options">
-                        <i onClick= "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
-                        <i onClick ="deleteTask(this);createTasks()" class="fas fa-trash-alt"></i>
+                        <i data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
+                        <i class="fas fa-trash-alt"></i>
                       </span>
                     </div>
                 `
@@ -85,6 +100,16 @@ const TodoApp = ((window, document) =>  {
         $dateInput.value = '';
         $textArea.value = '';
     };
+
+    let deleteTask = (e) => {
+        e.parentElement.parentElement.remove();
+
+        data.splice(e.parentElement.parentElement.id, 1);
+
+        localStorage.setItem("data", JSON.stringify(data));
+
+        console.log(data);
+    }
 
     return {
         Init: init
