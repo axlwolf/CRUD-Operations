@@ -14,6 +14,7 @@ const TodoApp = ((window, document) =>  {
     let data = [];
 
     let init = () => { 
+        loadDataFromLocalStorage;
         console.log("Init");
         bindEvents();
     }
@@ -36,7 +37,6 @@ const TodoApp = ((window, document) =>  {
                 deleteTask(target);
                 createTasks();
             }
-
         });
     }
 
@@ -110,6 +110,22 @@ const TodoApp = ((window, document) =>  {
 
         console.log(data);
     }
+
+    let editTask = (e) => {
+        let selectedTask = e.parentElement.parentElement;
+
+        $textInput.value = selectedTask.children[0].innerHTML;
+        $dateInput.value = selectedTask.children[1].innerHTML;
+        $textArea.value = selectedTask.children[2].innerHTML;
+
+        deleteTask(e);
+    }
+
+    let loadDataFromLocalStorage = (() => {
+        data = JSON.parse(localStorage.getItem("data")) || [];
+        console.log(data);
+        createTasks();
+    })();
 
     return {
         Init: init
